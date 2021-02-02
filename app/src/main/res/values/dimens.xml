@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="zero_dp">0dp</dimen>
+    <dimen name="button_margin_start">5dp</dimen>
+    <dimen name="nav_header_height">200dp</dimen>
+    <dimen name="about_textsize">24sp</dimen>
+    <dimen name="padding_top">5dp</dimen>
+    <dimen name="user_name_size">30sp</dimen>
+</resources>
