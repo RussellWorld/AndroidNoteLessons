@@ -1,27 +1,22 @@
 package com.example.androidnotelessons;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class DataPickerFragment extends Fragment {
-    private Note note;
     private static final String ARG_NOTE = "note";
+    private Note note;
 
     public DataPickerFragment() {
         // Required empty public constructor
@@ -49,11 +44,10 @@ public class DataPickerFragment extends Fragment {
     //Инициализируем кнопки
     private void initButtons(View view) {
         Button buttonOk = view.findViewById(R.id.button_ok_date_picker);
-
         buttonOk.setOnClickListener((View.OnClickListener) v -> {
-            Intent intent = new Intent();
             DatePicker picker = (DatePicker) view.findViewById(R.id.date_picker);
-            Calendar calendar = new GregorianCalendar(picker.getYear(), picker.getMonth() + 1, picker.getDayOfMonth());
+            Calendar calendar;
+            calendar = new GregorianCalendar(picker.getYear(), picker.getMonth() + 1, picker.getDayOfMonth());
             long dateUT = calendar.getTimeInMillis();
             note.setCreationDateUnixTime(dateUT);
             FragmentHandler.popBackStack(requireActivity());

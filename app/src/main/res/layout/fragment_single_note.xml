@@ -7,9 +7,10 @@
     <EditText
         android:id="@+id/text_view_name"
         android:layout_width="wrap_content"
-
         android:layout_height="wrap_content"
+        android:autofillHints="@string/name"
         android:hint="@string/name"
+        android:inputType="text"
         app:layout_constraintBottom_toBottomOf="@id/text_view_date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,6 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/description"
+        android:importantForAutofill="no"
+        android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_view_name" />
 
@@ -35,6 +38,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/content"
+        android:importantForAutofill="no"
+        android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_view_description" />
 

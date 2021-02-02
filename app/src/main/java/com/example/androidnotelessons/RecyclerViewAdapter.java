@@ -11,18 +11,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    private ArrayList<Note> dataSource;
+    private final ArrayList<Note> dataSource;
     private OnItemClickListener clickListener;
+
+    public RecyclerViewAdapter(ArrayList<Note> dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_item, parent, false);
         return new ViewHolder(v);
-    }
-
-    public RecyclerViewAdapter(ArrayList<Note> dataSource) {
-        this.dataSource = dataSource;
     }
 
     public void setOnItemClickListener(OnItemClickListener clickListener) {
@@ -44,16 +44,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewName;
-        private TextView textViewDate;
+        private final TextView textViewName;
+        private final TextView textViewDate;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.note_name_text_view);
             textViewDate = itemView.findViewById(R.id.note_date_text_view);
-            itemView.setOnClickListener(v -> {
-                clickListener.onItemClick(getAdapterPosition());
-            });
+            itemView.setOnClickListener(v -> clickListener.onItemClick(getAdapterPosition()));
         }
 
         public void onBind(Note note) {

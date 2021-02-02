@@ -19,9 +19,7 @@ import androidx.fragment.app.FragmentActivity;
 public class SingleNoteFragment extends Fragment {
 
     static final String ARG_SINGLE_NOTE = "note";
-
     private Note note;
-
     public SingleNoteFragment() {
         // Required empty public constructor
     }
@@ -96,8 +94,9 @@ public class SingleNoteFragment extends Fragment {
             case R.id.add_link:
                 Toast.makeText(getContext(), "Add link chosen", Toast.LENGTH_LONG).show();
                 return true;
+            default:
+                throw new IllegalStateException("Unexpected value: " + id);
         }
 
-        return super.onOptionsItemSelected(item);
     }
 }

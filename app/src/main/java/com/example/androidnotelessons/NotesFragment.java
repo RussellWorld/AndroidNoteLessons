@@ -21,10 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class NotesFragment extends Fragment {
-
     private static final String CURRENT_NOTE = "CurrentNote";
     private int currentNoteInt = 0;
-    private ArrayList<Note> notesArray = new ArrayList<>();
+    protected final ArrayList<Note> notesArray = new ArrayList<>();
     private boolean isLandscape;
 
     @Override
@@ -42,7 +41,6 @@ public class NotesFragment extends Fragment {
         for (int i = 0; i < notes.length; i++) {
             notesArray.add(createNewNote(i));
         }
-
     }
 
     @Override
@@ -56,7 +54,6 @@ public class NotesFragment extends Fragment {
         } else {
             currentNoteInt = 0;
         }
-
         if (isLandscape) {
             showNoteLand(getNote(currentNoteInt));
         }
@@ -80,7 +77,7 @@ public class NotesFragment extends Fragment {
     private Note createNewNote(int index) {
         Resources res = getResources();
         int isImportantInt = Integer.parseInt(res.getStringArray(R.array.importances)[index]);
-        Boolean isImportant = isImportantInt == 1;
+        boolean isImportant = isImportantInt == 1;
         Note note = new Note(res.getStringArray(R.array.names)[index],
                 res.getStringArray(R.array.descriptions)[index], Long.parseLong(res.getStringArray(R.array.datesUT)[index]), isImportant, res.getStringArray(R.array.contents)[index]);
         return note;
