@@ -1,14 +1,16 @@
-package com.example.androidnotelessons;
+package com.example.androidnotelessons.ui;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+
+import com.example.androidnotelessons.R;
+
 public class AboutFragment extends Fragment {
+
 
     public AboutFragment() {
         // Required empty public constructor

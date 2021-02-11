@@ -1,4 +1,5 @@
-package com.example.androidnotelessons;
+package com.example.androidnotelessons.ui;
+
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,13 +8,19 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.androidnotelessons.R;
+
+
 public class SettingsFragment extends Fragment {
+
+
     public SettingsFragment() {
         // Required empty public constructor
     }
 
     public static SettingsFragment newInstance() {
-        return new SettingsFragment();
+        SettingsFragment fragment = new SettingsFragment();
+        return fragment;
     }
 
     @Override

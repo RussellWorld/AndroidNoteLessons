@@ -1,11 +1,11 @@
-package com.example.androidnotelessons;
+package com.example.androidnotelessons.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.format.DateUtils;
 
-import java.util.Calendar;
 
-class Note implements Parcelable {
+public class Note implements Parcelable {
     public static final Creator<Note> CREATOR = new Creator<Note>() {
         @Override
         public Note createFromParcel(Parcel in) {
@@ -17,6 +17,7 @@ class Note implements Parcelable {
             return new Note[size];
         }
     };
+    private String id; //ID заметки
     private String name; //Имя заметки
     private String description; //Описание
     private long creationDateUnixTime; //Дата создания Unix time
@@ -64,17 +65,14 @@ class Note implements Parcelable {
     }
 
     public String getFormatedCreationDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(((long) getCreationDateUnixTime()));
-        String format = String.format("%d/%d/%d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        return format;
+        return DateUtils.formatDateTime(null, getCreationDateUnixTime(), DateUtils.FORMAT_SHOW_DATE);
     }
 
-    public boolean isImportant() {
+    public boolean getIsImportant() {
         return isImportant;
     }
 
-    public void setImportant(boolean important) {
+    public void setIsImportant(boolean important) {
         isImportant = important;
     }
 
@@ -86,6 +84,13 @@ class Note implements Parcelable {
         this.content = content;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     @Override
     public int describeContents() {
