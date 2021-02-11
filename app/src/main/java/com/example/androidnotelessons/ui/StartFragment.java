@@ -23,6 +23,8 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 
+import java.util.Objects;
+
 public class StartFragment extends Fragment {
 
     private static final int RC_SING_IN = 40404;
@@ -38,12 +40,9 @@ public class StartFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     public static StartFragment newInstance() {
-        StartFragment fragment = new StartFragment();
-        return fragment;
+        return new StartFragment();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,7 +58,7 @@ public class StartFragment extends Fragment {
     private void initGoogleSingIn() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 
-        googleSignInClient = GoogleSignIn.getClient(getContext(), gso);
+        googleSignInClient = GoogleSignIn.getClient(Objects.requireNonNull(getContext()), gso);
     }
 
     private void initView(View view) {
@@ -67,7 +66,7 @@ public class StartFragment extends Fragment {
         buttonSignInGoogle.setOnClickListener(v -> signIn());
         emailView = view.findViewById(R.id.email_text_view);
         continue_ = view.findViewById(R.id.continue_button);
-        continue_.setOnClickListener(v -> FragmentHandler.replaceFragment(requireActivity(), new NotesFragment(), R.id.notes, false, true, false));
+        continue_.setOnClickListener(v -> FragmentHandler.replaceFragment(requireActivity(), new NotesFragment(), R.id.notes, false, true));
         buttonSignOutGoogle = view.findViewById(R.id.google_sign_out_button);
         buttonSignOutGoogle.setOnClickListener(v -> signOut());
     }
@@ -75,7 +74,7 @@ public class StartFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(Objects.requireNonNull(getContext()));
         if (account != null) {
             disableSign();
             updateUI(account.getEmail());
@@ -111,6 +110,7 @@ public class StartFragment extends Fragment {
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
             disableSign();
+            assert account != null;
             updateUI(account.getEmail());
         } catch (ApiException e) {
             Log.w(TAG, "singInResult:failed code = " + e.getStatusCode());
@@ -132,5 +132,4 @@ public class StartFragment extends Fragment {
         MainActivity activity = (MainActivity) requireActivity();
         activity.setAuthorized(true);
     }
-
 }

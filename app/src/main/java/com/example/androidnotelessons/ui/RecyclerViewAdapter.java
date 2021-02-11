@@ -16,8 +16,12 @@ import com.example.androidnotelessons.data.NoteSource;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private NoteSource dataSource;
     private OnItemClickListener clickListener;
-    private Fragment fragment;
+    private final Fragment fragment;
     private int menuPosition;
+
+    public RecyclerViewAdapter(Fragment fragment) {
+        this.fragment = fragment;
+    }
 
     @NonNull
     @Override
@@ -28,10 +32,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public int getMenuPosition() {
         return menuPosition;
-    }
-
-    public RecyclerViewAdapter(Fragment fragment) {
-        this.fragment = fragment;
     }
 
     public void setDataSource(NoteSource noteSource) {
@@ -59,17 +59,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewName;
-        private TextView textViewDate;
+        private final TextView textViewName;
+        private final TextView textViewDate;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.note_name_text_view);
             textViewDate = itemView.findViewById(R.id.note_date_text_view);
             registerContextMenu(itemView);
-            itemView.setOnClickListener(v -> {
-                clickListener.onItemClick(getAdapterPosition());
-            });
+            itemView.setOnClickListener(v -> clickListener.onItemClick(getAdapterPosition()));
         }
 
         public void onBind(Note note) {

@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Publisher {
-    private List<Observer> observers;
+    private final List<Observer> observers = new ArrayList<>();
 
     public Publisher() {
-        observers = new ArrayList<>();
     }
 
     public void subscribe(Observer observer) {

@@ -11,7 +11,6 @@ import com.example.androidnotelessons.R;
 
 public class AboutFragment extends Fragment {
 
-
     public AboutFragment() {
         // Required empty public constructor
     }

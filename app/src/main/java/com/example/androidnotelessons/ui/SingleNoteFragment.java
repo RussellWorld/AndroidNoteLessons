@@ -1,4 +1,5 @@
 package com.example.androidnotelessons.ui;
+
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -11,14 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.androidnotelessons.FragmentHandler;
 import com.example.androidnotelessons.MainActivity;
@@ -31,18 +30,34 @@ import java.util.Calendar;
 public class SingleNoteFragment extends Fragment {
 
     static final String ARG_SINGLE_NOTE = "note";
-    private Publisher publisher;
-    private Note note;
-    private Calendar creationDate = Calendar.getInstance();
+    private final Calendar creationDate = Calendar.getInstance();
     EditText etName;
     TextView tvDate;
     EditText etDescription;
     EditText etContent;
     Button buttonOk;
     Button buttonCancel;
+    DatePickerDialog.OnDateSetListener onDateSetListener = (view, year, month, dayOfMonth) -> {
+        creationDate.set(year, month, dayOfMonth);
+        setDateTextView(creationDate.getTimeInMillis());
+    };
+    private Publisher publisher;
+    private Note note;
 
     public SingleNoteFragment() {
         // Required empty public constructor
+    }
+
+    public static SingleNoteFragment newInstance(Note note) {
+        SingleNoteFragment fragment = new SingleNoteFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_SINGLE_NOTE, note);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static SingleNoteFragment newInstance() {
+        return new SingleNoteFragment();
     }
 
     @Override
@@ -56,24 +71,6 @@ public class SingleNoteFragment extends Fragment {
     public void onDetach() {
         publisher = null;
         super.onDetach();
-    }
-
-    DatePickerDialog.OnDateSetListener onDateSetListener = (view, year, month, dayOfMonth) -> {
-        creationDate.set(year, month, dayOfMonth);
-        setDateTextView(creationDate.getTimeInMillis());
-    };
-
-    public static SingleNoteFragment newInstance(Note note) {
-        SingleNoteFragment fragment = new SingleNoteFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_SINGLE_NOTE, note);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static SingleNoteFragment newInstance() {
-        SingleNoteFragment fragment = new SingleNoteFragment();
-        return fragment;
     }
 
     @Override
@@ -113,13 +110,13 @@ public class SingleNoteFragment extends Fragment {
     private Note collectNote() {
         String name = this.etName.getText().toString();
         String description = this.etDescription.getText().toString();
-        Boolean isImportant = true;
+        boolean isImportant = true;
         String content = this.etContent.getText().toString();
-        if (note != null){
+        if (note != null) {
             Note answer = new Note(name, description, creationDate.getTimeInMillis(), isImportant, content);
             answer.setId(note.getId());
             return answer;
-        }else {
+        } else {
             return new Note(name, description, creationDate.getTimeInMillis(), isImportant, content);
         }
     }
@@ -130,10 +127,8 @@ public class SingleNoteFragment extends Fragment {
 
         etDescription = view.findViewById(R.id.edit_text_description);
         etContent = view.findViewById(R.id.edit_text_content);
-        tvDate.setOnClickListener(v -> {
-            new DatePickerDialog(requireActivity(), onDateSetListener, creationDate.get(Calendar.YEAR),
-                    creationDate.get(Calendar.MONTH), creationDate.get(Calendar.DAY_OF_MONTH)).show();
-        });
+        tvDate.setOnClickListener(v -> new DatePickerDialog(requireActivity(), onDateSetListener, creationDate.get(Calendar.YEAR),
+                creationDate.get(Calendar.MONTH), creationDate.get(Calendar.DAY_OF_MONTH)).show());
 
         //Пока оба листенера будут делать одно и тоже. Разветвлю логику,
         // когда буду реализовывать сохранение измененных заметок

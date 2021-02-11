@@ -23,9 +23,6 @@ import com.example.androidnotelessons.R;
 import com.example.androidnotelessons.data.Note;
 import com.example.androidnotelessons.data.NoteSource;
 import com.example.androidnotelessons.data.NoteSourceFirebaseImpl;
-import com.example.androidnotelessons.data.NoteSourceResponseAdded;
-import com.example.androidnotelessons.data.NoteSourceResponseDelete;
-import com.example.androidnotelessons.observe.Observer;
 import com.example.androidnotelessons.observe.Publisher;
 
 public class NotesFragment extends Fragment {
@@ -74,6 +71,7 @@ public class NotesFragment extends Fragment {
 
         return view;
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -92,18 +90,12 @@ public class NotesFragment extends Fragment {
         recyclerViewAdapter.setOnItemClickListener(position -> {
             showNote(getNote(position));
             currentNoteInt = position;
-            publisher.subscribe(new Observer() {
-                @Override
-                public void updateNotes(Note note) {
-                    notesSource.updateNote(position, note, () -> {
-                        if (isLandscape){
-                            currentNoteInt = position;
-                            recyclerViewAdapter.notifyItemChanged(position);
-                        }
-                    });
-
+            publisher.subscribe(note -> notesSource.updateNote(position, note, () -> {
+                if (isLandscape) {
+                    currentNoteInt = position;
+                    recyclerViewAdapter.notifyItemChanged(position);
                 }
-            });
+            }));
         });
         recyclerView.setAdapter(recyclerViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
@@ -139,7 +131,7 @@ public class NotesFragment extends Fragment {
         } else {
             detail = SingleNoteFragment.newInstance(currentNote);
         }
-        FragmentHandler.replaceFragment(requireActivity(), detail, R.id.single_note, false, false, false);
+        FragmentHandler.replaceFragment(requireActivity(), detail, R.id.single_note, false, false);
     }
 
     //Покажем содержимое заметки для портретного режима
@@ -152,7 +144,7 @@ public class NotesFragment extends Fragment {
             } else {
                 detail = SingleNoteFragment.newInstance(currentNote);
             }
-            FragmentHandler.replaceFragment(requireActivity(), detail, R.id.notes, true, false, false);
+            FragmentHandler.replaceFragment(requireActivity(), detail, R.id.notes, true, false);
         }
     }
 
@@ -173,28 +165,17 @@ public class NotesFragment extends Fragment {
         switch (id) {
             case R.id.add_note:
                 showNote(null);
-                publisher.subscribe(new Observer() {
-                    @Override
-                    public void updateNotes(Note note) {
-                        notesSource.addNote(note, new NoteSourceResponseAdded() {
-                            @Override
-                            public void added() {
-                                if (isLandscape) {
-                                    currentNoteInt = notesSource.size() - 1;
-                                    recyclerViewAdapter.notifyItemInserted(currentNoteInt);
-                                }
-                            }
-                        });
+                publisher.subscribe(note -> notesSource.addNote(note, () -> {
+                    if (isLandscape) {
+                        currentNoteInt = notesSource.size() - 1;
+                        recyclerViewAdapter.notifyItemInserted(currentNoteInt);
                     }
-                });
+                }));
                 return true;
             case R.id.clear_notes:
-                notesSource.clearNotes(new NoteSourceResponseDelete() {
-                    @Override
-                    public void deleted() {
-                        currentNoteInt = 0;
-                        recyclerViewAdapter.notifyDataSetChanged();
-                    }
+                notesSource.clearNotes(() -> {
+                    currentNoteInt = 0;
+                    recyclerViewAdapter.notifyDataSetChanged();
                 });
 
                 return true;
@@ -206,27 +187,21 @@ public class NotesFragment extends Fragment {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int position = recyclerViewAdapter.getMenuPosition();
-        switch (item.getItemId()) {
-            case R.id.delete_note:
-                final int positionFi = position;
-                notesSource.deleteNote(position, new NoteSourceResponseDelete() {
-                    @Override
-                    public void deleted() {
-                        recyclerViewAdapter.notifyItemRemoved(positionFi);
-                    }
-                });
+        if (item.getItemId() == R.id.delete_note) {
+            final int positionFi = position;
+            notesSource.deleteNote(position, () -> recyclerViewAdapter.notifyItemRemoved(positionFi));
 
-                //для ландшафтной ориентации проверим размер списка.
-                if (isLandscape && notesSource.size() > 0) {
-                    //Если удалили позицию в конце списка, откроем по умолчанию предыдущую позицию
-                    //TODO Обработать открытие детально заметки при очистке списка.
-                    //Сейчас открывается последняя удаленная
-                    if (notesSource.size() <= position) {
-                        position--;
-                    }
-                    showNoteLand(notesSource.getNote(position));
+            //для ландшафтной ориентации проверим размер списка.
+            if (isLandscape && notesSource.size() > 0) {
+                //Если удалили позицию в конце списка, откроем по умолчанию предыдущую позицию
+                //TODO Обработать открытие детально заметки при очистке списка.
+                //Сейчас открывается последняя удаленная
+                if (notesSource.size() <= position) {
+                    position--;
                 }
-                return true;
+                showNoteLand(notesSource.getNote(position));
+            }
+            return true;
         }
         return super.onContextItemSelected(item);
     }
